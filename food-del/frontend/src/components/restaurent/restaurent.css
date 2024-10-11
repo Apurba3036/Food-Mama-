@@ -1,0 +1,161 @@
+/* Styling the main container */
+.restaurant-container {
+    max-width: 1200px;
+    margin: 2px auto;
+    padding: 20px;
+    background-color: #f8f8f8;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Title Styling */
+  .restaurant-title {
+    font-size: 2.5rem;
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  /* Grid layout for the restaurant cards */
+  .restaurant-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+  }
+  
+  /* Add some hover effects to make it interactive */
+  .restaurant-grid .new-card:hover {
+    transform: scale(1.05);
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  /* RestaurantDetail.css */
+
+.restaurant-detail {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.restaurant-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.restaurant-header h1 {
+    font-size: 2.5rem;
+    color: #333;
+}
+
+.restaurant-header p {
+    font-size: 1.2rem;
+    color: #666;
+}
+
+.restaurant-image {
+    max-width: 100%;
+    border-radius: 10px;
+    margin-top: 20px;
+}
+
+.food-item-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.food-item {
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    width: calc(33.333% - 20px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+}
+
+.food-item:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.food-item-image {
+    width: 100%;
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+
+.food-item-info {
+    text-align: center;
+}
+
+.food-item-info h3 {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.food-item-info p {
+    font-size: 1rem;
+    color: #666;
+}
+
+.food-item-price {
+    font-size: 1.2rem;
+    color: #007BFF;
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+.quantity-selector {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 10px 0;
+}
+
+.quantity-selector label {
+    margin-right: 10px;
+    font-size: 1rem;
+    color: #333;
+}
+
+.quantity-selector input {
+    width: 60px;
+    padding: 5px;
+    font-size: 1rem;
+    text-align: center;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.add-to-cart-button {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 1rem;
+    color: white;
+    background-color: #28a745;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.add-to-cart-button:hover {
+    background-color: #218838;
+}
+
+@media (max-width: 768px) {
+    .food-item {
+        width: calc(50% - 20px);
+    }
+}
+
+@media (max-width: 480px) {
+    .food-item {
+        width: 100%;
+    }
+}

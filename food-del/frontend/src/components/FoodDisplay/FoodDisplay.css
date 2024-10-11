@@ -1,0 +1,87 @@
+.food-display {
+    padding: 20px;
+    background-color: #f8f8f8; /* Light background for contrast */
+  }
+  
+  .food-display h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  .food-display-list {
+    display: flex;
+    flex-wrap: wrap; /* Allows items to wrap to the next line */
+    justify-content: center; /* Center the items */
+    gap: 20px; /* Adds space between items */
+  }
+  
+  .food-item {
+    background-color: #fff; /* White background for the item */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+    width: 250px; /* Fixed width for a uniform look */
+    height: 320px; /* Set a height to avoid tall and thin appearance */
+    display: flex;
+    flex-direction: column; /* Stack the content vertically */
+    overflow: hidden; /* Prevent overflow */
+  }
+  
+  .food-item:hover {
+    transform: scale(1.05); /* Scale effect on hover */
+  }
+  
+  .food-item-img-container {
+    flex: 1; /* Allow image container to grow */
+    display: flex;
+    justify-content: center; /* Center the image */
+    align-items: center; /* Center the image vertically */
+  }
+  
+  .food-item-image {
+    max-width: 100%; /* Ensure the image fits well */
+    max-height: 100%; /* Ensure the image doesn't overflow */
+    object-fit: cover; /* Cover the container without distortion */
+  }
+  
+  .food-item-info {
+    padding: 10px; /* Add padding for text */
+    text-align: left; /* Align text to the left */
+  }
+  
+  .food-item-name-rating {
+    display: flex;
+    justify-content: space-between; /* Space between name and rating */
+    align-items: center; /* Center items vertically */
+  }
+  
+  .food-item-name-rating p {
+    font-weight: bold; /* Bold for the name */
+    color: #333;
+  }
+  
+  .food-item-desc {
+    font-size: 0.9em; /* Smaller size for the description */
+    color: #777; /* Subtle color for description */
+    margin: 5px 0; /* Add margin for spacing */
+  }
+  
+  .food-item-price {
+    font-weight: bold; /* Bold for price */
+    font-size: 1.2em; /* Slightly larger size */
+    color: #e91e63; /* Change color for price */
+  }
+  
+  /* Add additional styling for the counter, if required */
+  .food-item-counter {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 20px;
+    padding: 5px;
+    margin-top: 5px; /* Add margin for separation */
+  }
+  
