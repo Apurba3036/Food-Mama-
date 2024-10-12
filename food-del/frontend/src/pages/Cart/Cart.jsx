@@ -6,12 +6,13 @@ import { toast } from 'react-toastify';
 const Cart = () => {
   const [cartItems, setCartItems] = useState({});
   const [totalAmount, setTotalAmount] = useState(0);
+  const [promoCode, setPromoCode] = useState('');
+  const [discountedTotal, setDiscountedTotal] = useState(0); // New state for discounted total
   const navigate = useNavigate();
   const url = "http://localhost:4000"; // assuming your image url base
   const currency = "$"; // assuming dollar currency
-  const deliveryCharge = 10 // example delivery charge
+  const deliveryCharge = 10; // example delivery charge
 
-  
   useEffect(() => {
     const cart = JSON.parse(localStorage.getItem('cart')) || {};
     setCartItems(cart);
@@ -25,6 +26,7 @@ const Cart = () => {
       total += cart[itemId].price * cart[itemId].quantity;
     });
     setTotalAmount(total);
+    setDiscountedTotal(total + deliveryCharge); // Initialize discounted total
   };
 
   // Remove item from cart
@@ -34,7 +36,19 @@ const Cart = () => {
     setCartItems(updatedCart);
     localStorage.setItem('cart', JSON.stringify(updatedCart));
     calculateTotal(updatedCart);
-    toast.warn(`remove from the cart`)
+    toast.warn(`removed from the cart`);
+  };
+
+  // Handle promo code submission
+  const handlePromoCodeSubmit = () => {
+    if (promoCode === 'eid') {
+      const discount = totalAmount * 0.05; // Calculate 5% discount
+      const newTotal = totalAmount - discount + deliveryCharge; // Apply discount to total
+      setDiscountedTotal(newTotal);
+      toast.success('Promo code applied! You received a 5% discount.');
+    } else {
+      toast.error('Invalid promo code!');
+    }
   };
 
   if (Object.keys(cartItems).length === 0) {
@@ -75,9 +89,9 @@ const Cart = () => {
             <hr />
             <div className="cart-total-details"><p>Delivery Fee</p><p>{currency}{totalAmount === 0 ? 0 : deliveryCharge}</p></div>
             <hr />
-            <div className="cart-total-details"><b>Total</b><b>{currency}{totalAmount === 0 ? 0 : totalAmount + deliveryCharge}</b></div>
+            <div className="cart-total-details"><b>Total</b><b>{currency}{discountedTotal === 0 ? 0 : discountedTotal}</b></div>
           </div>
-          <button onClick={() => navigate('/order', { state: { totalAmount, deliveryCharge } })}>
+          <button onClick={() => navigate('/order', { state: { totalAmount: discountedTotal, deliveryCharge } })}>
             PROCEED TO CHECKOUT
           </button>
         </div>
@@ -86,8 +100,13 @@ const Cart = () => {
           <div>
             <p>If you have a promo code, Enter it here</p>
             <div className='cart-promocode-input'>
-              <input type="text" placeholder='promo code' />
-              <button>Submit</button>
+              <input
+                type="text"
+                placeholder='promo code'
+                value={promoCode}
+                onChange={(e) => setPromoCode(e.target.value)} // Update promo code state
+              />
+              <button onClick={handlePromoCodeSubmit}>Submit</button> {/* Handle promo code submission */}
             </div>
           </div>
         </div>

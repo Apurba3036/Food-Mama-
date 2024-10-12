@@ -1,13 +1,13 @@
 import React, { useContext, useEffect, useState } from 'react';
 import './PlaceOrder.css';
 import { assets } from '../../assets/assets';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom'; // Added useLocation
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import { StoreContext } from '../../Context/StoreContext';
 
 const PlaceOrder = () => {
-    const { token } = useContext(StoreContext)
+    const { token,url } = useContext(StoreContext);
     const [payment, setPayment] = useState("cod");
     const [data, setData] = useState({
         firstName: "",
@@ -22,8 +22,8 @@ const PlaceOrder = () => {
     });
 
     const navigate = useNavigate();
-    const url = "http://localhost:4000"; // Add your API base URL
-    const deliveryCharge = 10; // Example delivery charge
+    const location = useLocation(); // Use location to access state
+    const { totalAmount, deliveryCharge } = location.state || {}; // Destructure totalAmount and deliveryCharge from state
     const currency = "$"; // Currency symbol
 
     const onChangeHandler = (event) => {
@@ -34,15 +34,6 @@ const PlaceOrder = () => {
 
     const getCartItems = () => {
         return JSON.parse(localStorage.getItem('cart')) || {};
-    };
-
-    const getTotalCartAmount = () => {
-        const cartItems = getCartItems();
-        let total = 0;
-        Object.keys(cartItems).forEach(itemId => {
-            total += cartItems[itemId].price * cartItems[itemId].quantity;
-        });
-        return total;
     };
 
     const placeOrder = async (e) => {
@@ -61,35 +52,27 @@ const PlaceOrder = () => {
             address: data,
             items: orderItems,
             deliveryCharge: deliveryCharge,
-            amount: getTotalCartAmount() + deliveryCharge, 
+            amount: totalAmount + deliveryCharge, // Use the passed totalAmount
         };
 
         try {
             let response;
             if (payment === "stripe") {
-                response = await axios.post(`${url}/api/order/place`, orderData,{ headers: { token } });
-            } else if(payment === "SSL") {
-                response = await axios.post(`${url}/create-payment`, orderData,{ headers: { token } });
+                response = await axios.post(`${url}/api/order/place`, orderData, { headers: { token } });
+            } else if (payment === "SSL") {
+                response = await axios.post(`${url}/create-payment`, orderData, { headers: { token } });
+            } else {
+                response = await axios.post(`${url}/api/order/placecod`, orderData, { headers: { token } });
             }
-            else{
-                response = await axios.post(`${url}/api/order/placecod`, orderData,{ headers: { token } });
-            }
-            console.log(response);
-            console.log(response.data.paymentUrl);
+
             if (response.data.success || response.data.paymentUrl) {
                 if (payment === "stripe") {
                     const { session_url } = response.data;
                     localStorage.removeItem('cart');
                     window.location.replace(session_url);
-
-                } 
-                 else if (payment === "SSL") {
-                   
-                    // localStorage.removeItem('cart');
+                } else if (payment === "SSL") {
                     window.location.replace(response.data.paymentUrl);
-
-                } 
-                else {
+                } else {
                     navigate("/myorders");
                     toast.success(response.data.message);
                     localStorage.removeItem('cart'); // Clear the cart after placing the order
@@ -103,15 +86,15 @@ const PlaceOrder = () => {
         }
     };
 
-     useEffect(() => {
+    useEffect(() => {
         if (!token) {
-            toast.error("to place an order sign in first")
-            navigate('/cart')
+            toast.error("To place an order, sign in first");
+            navigate('/cart');
         }
-        else if (getTotalCartAmount() === 0) {
-            navigate('/cart')
+        else if (!totalAmount) { // Redirect to cart if totalAmount is not available
+            navigate('/cart');
         }
-    }, [token])
+    }, [token, totalAmount]);
 
     return (
         <form onSubmit={placeOrder} className='place-order'>
@@ -137,11 +120,11 @@ const PlaceOrder = () => {
                 <div className="cart-total">
                     <h2>Cart Totals</h2>
                     <div>
-                        <div className="cart-total-details"><p>Subtotal</p><p>{currency}{getTotalCartAmount()}</p></div>
+                        <div className="cart-total-details"><p>Subtotal</p><p>{currency}{totalAmount}</p></div> {/* Use totalAmount */}
                         <hr />
-                        <div className="cart-total-details"><p>Delivery Fee</p><p>{currency}{getTotalCartAmount() === 0 ? 0 : deliveryCharge}</p></div>
+                        <div className="cart-total-details"><p>Delivery Fee</p><p>{currency}{totalAmount === 0 ? 0 : deliveryCharge}</p></div>
                         <hr />
-                        <div className="cart-total-details"><b>Total</b><b>{currency}{getTotalCartAmount() === 0 ? 0 : getTotalCartAmount() + deliveryCharge}</b></div>
+                        <div className="cart-total-details"><b>Total</b><b>{currency}{totalAmount === 0 ? 0 : totalAmount + deliveryCharge}</b></div>
                     </div>
                 </div>
                 <div className="payment">
